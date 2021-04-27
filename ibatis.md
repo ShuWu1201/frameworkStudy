@@ -101,7 +101,7 @@ public class Account {
                 <property name="driver" value="com.mysql.cj.jdbc.Driver"></property>
                 <property name="url" value="jdbc:mysql://localhost:3306/mybatis?useUnicode=true&amp;characterEncoding=UTF-8"></property>
                 <property name="username" value="root"></property>
-                <property name="password" value="shuwu1201"/>
+                <property name="password" value="xxxxxx"/>
             </dataSource>
         </environment>
 
@@ -158,7 +158,7 @@ public class Account {
                 <property name="driver" value="com.mysql.cj.jdbc.Driver"></property>
                 <property name="url" value="jdbc:mysql://localhost:3306/mybatis?useUnicode=true&amp;characterEncoding=UTF-8"></property>
                 <property name="username" value="root"></property>
-                <property name="password" value="shuwu1201"/>
+                <property name="password" value="xxxxxx"/>
             </dataSource>
         </environment>
 
