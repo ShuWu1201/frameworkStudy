@@ -20,10 +20,14 @@ public class Test {
 
         String statement = "com.southwind.mapper.AccountMapper.save";
 
-        Account account = new Account(1L, "zhangsan", "123456", 22);
+        Account account = new Account(21L, "张三", "123456", 22);
 
         sqlSession.insert(statement, account);
 
         sqlSession.commit();
+        /**
+         * 关闭资源
+         */
+        sqlSession.close();
     }
 }

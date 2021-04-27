@@ -26,5 +26,6 @@
     <!-- 注册 AccountMapper.xml -->
     <mappers>
         <mapper resource="com/southwind/mapper/AccountMapper.xml"></mapper>
+        <mapper resource="com/southwind/repository/AccountRepository.xml"></mapper>
     </mappers>
 </configuration>
