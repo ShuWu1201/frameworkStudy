@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jilian2.repository.CustomerRespsitory">
+
+    <!-- 结果集，将从数据库查询的结果封装起来 -->
+    <resultMap id="customerMap" type="com.jilian2.entity.Customer">
+        <!-- 将查出来的主健cid赋值给Customer对象属性id -->
+        <id column="cid" property="id"></id>
+        <!-- 将查出来的cname赋值给Customer对象的属性name -->
+        <result column="cname" property="name"></result>
+
+        <!-- 当JavaBean中是集合时使用collection标签，property表示Classes中的属性值，ofType代指集合中的泛型 -->
+        <collection property="goods" ofType="com.jilian2.entity.Goods">
+            <!-- 将查出来的gid赋值给Goods对象的属性id -->
+            <id column="gid" property="id"></id>
+            <!-- 将查出来的gname赋值给Goods对象的属性name -->
+            <result column="gname" property="name"></result>
+        </collection>
+    </resultMap>
+
+    <select id="findById" parameterType="long" resultMap="customerMap">
+        select c.id cid, c.name cname, g.id gid, g.name gname from customer c,goods g,customer_goods cg
+            where c.id = #{id} and
+                cg.cid = c.id and
+                cg.gid = g.id
+    </select>
+</mapper>

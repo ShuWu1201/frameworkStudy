@@ -27,5 +27,8 @@
     <mappers>
         <mapper resource="com/southwind/mapper/AccountMapper.xml"></mapper>
         <mapper resource="com/southwind/repository/AccountRepository.xml"></mapper>
+        <mapper resource="com/jilian/repository/StudentRepository.xml"></mapper>
+        <mapper resource="com/jilian/repository/ClassesRepository.xml"></mapper>
+        <mapper resource="com/jilian2/repository/CustomerRespsitory.xml"></mapper>
     </mappers>
 </configuration>

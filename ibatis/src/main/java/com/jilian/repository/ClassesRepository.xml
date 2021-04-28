@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jilian.repository.ClassesRepository">
+
+    <!-- 结果集，将从数据库查询的结果封装起来 -->
+    <resultMap id="classesMap" type="com.jilian.entity.Classes">
+        <!-- 将查出来的主健cid赋值给Student对象属性id -->
+        <id column="cid" property="id"></id>
+        <!-- 将查出来的cname属性赋值给Student对象的属性name -->
+        <result column="cname" property="name"></result>
+
+        <!-- 当JavaBean中是集合时使用collection标签，property表示Classes中的属性值，ofType代指集合中的泛型 -->
+        <collection property="students" ofType="com.jilian.entity.Student">
+            <id column="id" property="id"></id>
+            <result column="name" property="name"></result>
+        </collection>
+    </resultMap>
+
+    <select id="findById" parameterType="long" resultMap="classesMap">
+        select s.id, s.name, c.id as cid, c.name as cname from student s, classes c where c.id = #{id} and s.cid = c.id;
+    </select>
+</mapper>
