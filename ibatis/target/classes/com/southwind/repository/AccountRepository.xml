@@ -2,13 +2,37 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.southwind.repository.AccountRepository">
+    <!-- 添加缓存 -->
+    <cache type="org.mybatis.caches.ehcache.EhcacheCache">
+        <!-- 缓存创建之后，最后一次访问缓存的时间至缓存失效的时间间隔 -->
+        <property name="timeToIdleSeconds" value="3600"/>
+        <!-- 缓存自创建时间起至失效时间的间隔 -->
+        <property name="timeToLiveSeconds" value="3600"/>
+        <!-- 缓存的回收策略，LRU表示移除近期使用最少的对象 -->
+        <property name="memoryStoreEvictionPolicy" value="LRU"/>
+    </cache>
+
     <insert id="save" parameterType="com.southwind.entity.Account">
         insert into t_account(username,password,age) values (#{username},#{password},#{age})
     </insert>
 
     <update id="update" parameterType="com.southwind.entity.Account">
-        update t_account set username = #{username},password = #{password},age = #{age} where id = #{id}
+        update t_account 
+        <set>
+            <if test="username!=null">
+                username = #{username}
+            </if>
+            <if test="password!=null">
+                password = #{password}
+            </if>
+            <if test="age!=0">
+                age = #{age}
+            </if>
+            where id = #{id}
+        </set>
     </update>
+
+
 
     <!-- parameterType 写基本数据类型 long 或者包装类型 java.lang.Long 均可-->
     <delete id="deleteById" parameterType="java.lang.Long">
@@ -47,4 +71,74 @@
     <select id="findNameById" parameterType="long" resultType="java.lang.String">
         select username from t_account where id = #{id}
     </select>
+
+<!--    <select id="findByAccount" parameterType="com.southwind.entity.Account" resultType="com.southwind.entity.Account">-->
+<!--        select * from t_account-->
+<!--            <where>-->
+<!--                <if test="id!=0">-->
+<!--                    id = #{id}-->
+<!--                </if>-->
+<!--                <if test="username!=null">-->
+<!--                    and username = #{username}-->
+<!--                </if>-->
+<!--                <if test="password!=null">-->
+<!--                    and password = #{password}-->
+<!--                </if>-->
+<!--                <if test="age!=0">-->
+<!--                    and age = #{age}-->
+<!--                </if>-->
+<!--            </where>-->
+<!--    </select>-->
+
+<!--    <select id="findByAccount" parameterType="com.southwind.entity.Account" resultType="com.southwind.entity.Account">-->
+<!--        select * from t_account-->
+<!--        <where>-->
+<!--            <choose>-->
+<!--                <when test="id!=0">-->
+<!--                    id = #{id}-->
+<!--                </when>-->
+<!--                <when test="username!=null">-->
+<!--                    username = #{username}-->
+<!--                </when>-->
+<!--                <when test="password!=null">-->
+<!--                    password = #{password}-->
+<!--                </when>-->
+<!--                <when test="age!=0">-->
+<!--                    age = #{age}-->
+<!--                </when>-->
+<!--            </choose>-->
+<!--        </where>-->
+<!--    </select>-->
+
+    <select id="findByAccount" parameterType="com.southwind.entity.Account" resultType="com.southwind.entity.Account">
+        select *
+        from t_account
+        <!-- where 和 and 遇到会自动删除and -->
+        <trim prefix="where" prefixOverrides="and">
+            <if test="id!=0">
+                id = #{id}
+            </if>
+            <if test="username!=null">
+                and username = #{username}
+            </if>
+            <if test="password!=null">
+                and password = #{password}
+            </if>
+            <if test="age!=0">
+                and age = #{age}
+            </if>
+        </trim>
+    </select>
+    
+    <select id="findByIds" parameterType="com.southwind.entity.Account" resultType="com.southwind.entity.Account">
+        <!-- select * from t_account where id in (1,2,3)-->
+        <!-- collection表示遍历的是ids，open表示前半部分，close表示后面的括号，item表示遍历的元素是id，separator表示用逗号去分割元素 -->
+        select * from t_account
+        <where>
+            <foreach collection="ids" open="id in (" close=")" item="id" separator=",">
+                #{id}
+            </foreach>
+        </where>
+    </select>
+
 </mapper>

@@ -21,4 +21,21 @@
     <select id="findById" parameterType="long" resultMap="studentMap">
         select s.id, s.name, c.id as cid, c.name as cname from student s, classes c where s.id = #{id} and s.cid = c.id;
     </select>
+
+
+    <!-- 结果集，将从数据库查询的结果封装起来 -->
+    <resultMap id="studentMapLazy" type="com.jilian.entity.Student">
+        <!-- 将查出来的主健id赋值给Student对象属性id -->
+        <id column="id" property="id"></id>
+        <!-- 将查出来的name属性赋值给Student对象的属性name -->
+        <result column="name" property="name"></result>
+
+        <!-- 延迟加载：将结果集里取出的cid，使用select属性指定要使用的方法，使用column属性指定要传入select属性指定方法的参数以完成映射 -->
+        <association property="classes" javaType="com.jilian.entity.Classes" select="com.jilian.repository.ClassesRepository.findByIdLazy" column="cid">
+        </association>
+    </resultMap>
+
+    <select id="findByIdLazy" parameterType="long" resultMap="studentMapLazy">
+        select * from student where id = #{id}
+    </select>
 </mapper>

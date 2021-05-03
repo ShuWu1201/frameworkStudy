@@ -19,4 +19,7 @@ public interface AccountRepository {
     public Integer count2();
     public String findNameById(long id);
 
+    public Account findByAccount(Account account);
+
+    public List<Account> findByIds(Account account);
 }

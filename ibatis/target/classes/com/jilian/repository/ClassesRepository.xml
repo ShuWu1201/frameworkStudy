@@ -20,4 +20,8 @@
     <select id="findById" parameterType="long" resultMap="classesMap">
         select s.id, s.name, c.id as cid, c.name as cname from student s, classes c where c.id = #{id} and s.cid = c.id;
     </select>
+
+    <select id="findByIdLazy" parameterType="long" resultType="com.jilian.entity.Classes">
+        select * from classes where id = #{id}
+    </select>
 </mapper>

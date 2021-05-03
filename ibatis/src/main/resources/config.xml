@@ -2,6 +2,18 @@
 <!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-config.dtd">
 <configuration>
+    
+    <settings>
+        <!-- 控制台打印 SQL 的配置 -->
+        <setting name="logImpl" value="STDOUT_LOGGING"/>
+
+        <!-- 开启延迟加载，默认是关闭的 -->
+        <setting name="lazyLoadingEnabled" value="true"/>
+
+        <!-- 开启二级缓存 -->
+        <setting name="cacheEnabled" value="true"/>
+    </settings>
+    
 
     <!-- 配置 MyBatis 运行环境，可配置多个环境，default默认指定一个即可 -->
     <environments default="development">
@@ -30,5 +42,6 @@
         <mapper resource="com/jilian/repository/StudentRepository.xml"></mapper>
         <mapper resource="com/jilian/repository/ClassesRepository.xml"></mapper>
         <mapper resource="com/jilian2/repository/CustomerRespsitory.xml"></mapper>
+        <mapper resource="com/jilian2/repository/GoodsRepository.xml"></mapper>
     </mappers>
 </configuration>
