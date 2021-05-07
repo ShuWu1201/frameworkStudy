@@ -475,11 +475,158 @@ public class TestMapperProxy {
 
 ## 及联查询
 
+学生表：student
+
+![image-20210427230649329](/Users/sfmewl/Library/Application Support/typora-user-images/image-20210427230649329.png)
+
+班级表：classes
+
+![image-20210427230804594](/Users/sfmewl/Library/Application Support/typora-user-images/image-20210427230804594.png)
+
+
+
 - 一对多
 
-```mysql
-UPDATE `mybatis`.`student` SET `cid`='2' WHERE `id`='1';
-INSERT INTO `mybatis`.`student` (`id`, `name`, `cid`) VALUES ('2', '李四', '2');
-INSERT INTO `mybatis`.`student` (`id`, `name`, `cid`) VALUES ('3', '王五', '2');
-```
+  Student 实体类
 
+  ```java
+  package com.jilian.entity;
+  
+  import lombok.Data;
+  
+  @Data
+  public class Student {
+      private long id;
+      private String name;
+      /**
+       * 一个学生对应一个班级
+       */
+      private Classes classes;
+  
+  }
+  ```
+
+  Classes 实体类
+
+  ```java
+  package com.jilian.entity;
+  
+  import lombok.Data;
+  
+  import java.util.List;
+  
+  @Data
+  public class Classes {
+      private long id;
+      private String name;
+      /**
+       * 一个班级对应多个学生
+       */
+      private List<Student> students;
+  }
+  ```
+
+  StudentRepository 接口
+
+  ```java
+  package com.jilian.repository;
+  
+  import com.jilian.entity.Student;
+  
+  public interface StudentRepository {
+      public Student findById(long id);
+  }
+  ```
+
+  StudentMapper.xml（一对多关系：一个Classes对应多个Student）
+
+  ResultMap：查出来的结果集和 javaBean 对象一一对应起来
+
+  ```xml
+  <?xml version="1.0" encoding="UTF-8"?>
+  <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+          "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  <mapper namespace="com.jilian.repository.StudentRepository">
+  
+      <!-- 结果集，将从数据库查询的结果封装起来 -->
+      <resultMap id="studentMap" type="com.jilian.entity.Student">
+          <!-- 将查出来的主健id赋值给Student对象属性id -->
+          <id column="id" property="id"></id>
+          <!-- 将查出来的name属性赋值给Student对象的属性name -->
+          <result column="name" property="name"></result>
+  
+          <association property="classes" javaType="com.jilian.entity.Classes">
+              <!-- 将查出来的cid赋值给Classes对象的属性id -->
+              <id column="cid" property="id"></id>
+              <!-- 将查出来的cname赋值给Classes对象的属性name -->
+              <result column="cname" property="name"></result>
+          </association>
+      </resultMap>
+  
+      <select id="findById" parameterType="long" resultMap="studentMap">
+          select s.id, s.name, c.id as cid, c.name as cname from student s, classes c where s.id = #{id} and s.cid = c.id;
+      </select>
+  </mapper>
+  ```
+
+  控制台输出
+
+  ```
+  Student(id=1, name=张三, classes=Classes(id=2, name=6班, students=null)
+  ```
+
+- 反向查找
+
+  ClassesRepository
+
+  ```java
+  package com.jilian.repository;
+  
+  import com.jilian.entity.Classes;
+  
+  public interface ClassesRepository {
+      public Classes findById(long id);
+  }
+  ```
+
+  ClassesRepository.xml
+
+  ```xml
+  <?xml version="1.0" encoding="UTF-8"?>
+  <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+          "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  <mapper namespace="com.jilian.repository.ClassesRepository">
+  
+      <!-- 结果集，将从数据库查询的结果封装起来 -->
+      <resultMap id="classesMap" type="com.jilian.entity.Classes">
+          <!-- 将查出来的主健cid赋值给Student对象属性id -->
+          <id column="cid" property="id"></id>
+          <!-- 将查出来的cname属性赋值给Student对象的属性name -->
+          <result column="cname" property="name"></result>
+  
+          <!-- 当JavaBean中是集合时使用collection标签，property表示Classes中的属性值，ofType代指集合中的泛型 -->
+          <collection property="students" ofType="com.jilian.entity.Student">
+              <id column="id" property="id"></id>
+              <result column="name" property="name"></result>
+          </collection>
+      </resultMap>
+  
+      <select id="findById" parameterType="long" resultMap="classesMap">
+          select s.id, s.name, c.id as cid, c.name as cname from student s, classes c where c.id = #{id} and s.cid = c.id;
+      </select>
+  </mapper>
+  ```
+
+- 多对多
+
+  客户表：customer
+
+  ![image-20210427231428113](/Users/sfmewl/Library/Application Support/typora-user-images/image-20210427231428113.png)
+
+  商品表：goods
+
+  ![image-20210427231414228](/Users/sfmewl/Library/Application Support/typora-user-images/image-20210427231414228.png)
+
+  客户-商品表：customer_goods
+
+  ![image-20210427231906349](/Users/sfmewl/Library/Application Support/typora-user-images/image-20210427231906349.png)
