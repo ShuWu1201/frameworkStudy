@@ -7,10 +7,17 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="ibatis" />
+        <module name="mybatis-mapper" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="ibatis" target="15" />
+      <module name="mybatis-mapper" target="1.8" />
     </bytecodeTargetLevel>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="mybatis-mapper" options="-parameters" />
+    </option>
   </component>
 </project>

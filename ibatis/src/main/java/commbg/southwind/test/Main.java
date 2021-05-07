@@ -18,7 +18,7 @@ public class Main {
     public static void main(String[] args) {
         List<String> warings = new ArrayList<String>();
         boolean overwrite = true;
-        String genCig = "/generatorConfig.xml";
+        String genCig = "/hogwartsGeneratorConfig.xml";
         File configFile = new File(Main.class.getResource(genCig).getFile());
 
         ConfigurationParser configurationParser = new ConfigurationParser(warings);
